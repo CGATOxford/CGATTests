@@ -30,7 +30,9 @@ source test_python/bin/activate
 # a shared location.
 # TODO: checkout appropriate repository and branch from github
 if [ ! -d cgat ]; then
-    git clone --depth=1 git@github.com:CGATOxford/cgat.git cgat
+    git clone git@github.com:CGATOxford/cgat.git cgat
+else
+    echo "Using existing cgat repository"
 fi
 cd cgat
 git pull
@@ -38,7 +40,9 @@ python setup.py develop
 cd $workdir
 
 if [ ! -d CGATPipelines ]; then
-    git clone --depth=1 git@github.com:CGATOxford/CGATPipelines.git CGATPipelines
+    git clone git@github.com:CGATOxford/CGATPipelines.git CGATPipelines
+else
+    echo "Using exiting CGATPipelines repository"
 fi
 cd CGATPipelines
 git pull
@@ -47,7 +51,8 @@ cd $workdir
 
 # copy test configuration files
 cd $workdir
-cp /ifs/devel/andreas/pipeline_testing/save/{conf.py,pipeline.ini} .
+cp /ifs/devel/andreas/pipeline_testing/{conf.py,pipeline.ini} .
 
 # run pipelines
-python CGATPipelines/CGATPipelines/pipeline_testing.py -v 5 -p 10 make full >& jenkins.log
+echo "Starting pipelines"
+python CGATPipelines/CGATPipelines/pipeline_testing.py -v 5 -p 10 make full
