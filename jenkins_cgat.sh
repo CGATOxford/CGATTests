@@ -10,7 +10,7 @@ export MODULEPATH=/usr/share/Modules/modulefiles:/etc/modulefiles:/ifs/apps/modu
 eval `modulecmd bash load apps/java apps/python apps/perl apps/graphlib bio/alignlib bio/all apps/emacs`
 
 # enter working directory. Needs to be on /ifs and mounted everywhere
-workdir=/ifs/scratch/jenkins
+workdir=/ifs/projects/jenkins
 
 if [ ! -d $workdir ]; then
     mkdir $workdir
@@ -51,8 +51,11 @@ cd $workdir
 
 # copy test configuration files
 cd $workdir
-cp /ifs/devel/andreas/pipeline_testing/{conf.py,pipeline.ini} .
+git clone git@github.com:CGATOxford/CGATTests.git config
+ln -fs config/{pipeline.ini,conf.py} .
 
 # run pipelines
 echo "Starting pipelines"
 python CGATPipelines/CGATPipelines/pipeline_testing.py -v 5 -p 10 make full
+
+python CGATPipelines/CGATPipelines/pipeline_testing.py -v 5 -p 10 make build_report
