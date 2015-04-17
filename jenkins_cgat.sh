@@ -10,7 +10,8 @@ export MODULEPATH=/usr/share/Modules/modulefiles:/etc/modulefiles:/ifs/apps/modu
 eval `modulecmd bash load apps/java apps/python apps/perl apps/graphlib bio/alignlib bio/all apps/emacs`
 
 # enter working directory. Needs to be on /ifs and mounted everywhere
-workdir=/ifs/projects/jenkins
+# /ifs/projects not possible as jenkins not part of projects group.
+workdir=/ifs/mirror/jenkins
 
 if [ ! -d $workdir ]; then
     mkdir $workdir
