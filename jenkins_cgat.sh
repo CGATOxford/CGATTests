@@ -16,7 +16,9 @@ workdir=/ifs/mirror/jenkins
 if [ ! -d $workdir ]; then
     mkdir $workdir
 else
-    rm -rf $workdir/test_* $workdir/prereq_* *.log
+    if [ $JENKINS_ONLY_UPDATE == "false" ]; then
+	rm -rf $workdir/test_* $workdir/prereq_* csvdb *.log md5_*
+    fi
 fi
 
 cd $workdir
