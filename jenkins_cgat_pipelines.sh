@@ -11,7 +11,7 @@ eval `modulecmd bash load apps/java apps/python apps/perl apps/graphlib bio/alig
 
 # enter working directory. Needs to be on /ifs and mounted everywhere
 # /ifs/projects not possible as jenkins not part of projects group.
-workdir=/ifs/mirror/jenkins
+workdir=/ifs/mirror/jenkins/PipelineRegressionTests
 
 if [ ! -d $workdir ]; then
     mkdir $workdir

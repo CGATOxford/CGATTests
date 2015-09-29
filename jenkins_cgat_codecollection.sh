@@ -16,14 +16,10 @@ TEST_SCRIPTS=1
 
 # enter working directory. Needs to be on /ifs and mounted everywhere
 # /ifs/projects not possible as jenkins not part of projects group.
-workdir=/ifs/mirror/jenkins
+workdir=/ifs/mirror/jenkins/CodeCollection
 
 if [ ! -d $workdir ]; then
     mkdir $workdir
-else
-    if [ $JENKINS_ONLY_UPDATE == "false" ]; then
-	rm -rf $workdir/test_* $workdir/prereq_* csvdb *.log md5_*
-    fi
 fi
 
 cd $workdir
