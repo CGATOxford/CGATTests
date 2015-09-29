@@ -41,9 +41,10 @@ fi
 cd cgat
 git pull
 python setup.py develop
-cd $workdir
 
 # run nosetests
+cd $workdir/cgat
+
 if [ $TEST_IMPORT ] ; then
     nosetests -v tests/test_import.py ;
 fi
