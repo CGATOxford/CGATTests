@@ -39,10 +39,11 @@ else
 fi
 cd cgat
 git pull
+python setup.py build
 python setup.py develop
 
 # run tests
 cd $workdir/cgat
-
+echo -e "restrict:\n    manifest:\n" > tests/_test_commandline.yaml
 py.test -n $NUM_JOBS tests/test_*.py
 
