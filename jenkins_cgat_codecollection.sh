@@ -32,7 +32,7 @@ source test_python/bin/activate
 # a shared location.
 # TODO: checkout appropriate repository and branch from github
 if [ ! -d cgat ]; then
-    ln -s "/var/lib/jenkins/jobs/CGAT Code Collection/workspace" cgat
+    ln -s "$WORKSPACE" cgat
     # git clone git@github.com:CGATOxford/cgat.git cgat
 else
     echo "Using existing cgat repository"
