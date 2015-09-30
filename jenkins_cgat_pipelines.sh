@@ -12,6 +12,7 @@ eval `modulecmd bash load apps/java apps/python apps/perl apps/graphlib bio/alig
 # enter working directory. Needs to be on /ifs and mounted everywhere
 # /ifs/projects not possible as jenkins not part of projects group.
 workdir=/ifs/mirror/jenkins/PipelineRegressionTests
+confdir=/ifs/mirror/jenkins/config
 
 if [ ! -d $workdir ]; then
     mkdir $workdir
@@ -55,7 +56,7 @@ cd $workdir
 # copy test configuration files
 cd $workdir
 git clone git@github.com:CGATOxford/CGATTests.git config
-ln -fs config/{pipeline.ini,conf.py} .
+ln -fs $confdir/{pipeline.ini,conf.py} .
 
 # run pipelines
 echo "Starting pipelines"
