@@ -61,5 +61,5 @@ ln -fs $confdir/{pipeline.ini,conf.py} .
 # run pipelines
 echo "Starting pipelines"
 python CGATPipelines/CGATPipelines/pipeline_testing.py -v 5 -p 10 make full
-
+echo "Building report"
 python CGATPipelines/CGATPipelines/pipeline_testing.py -v 5 -p 10 make build_report

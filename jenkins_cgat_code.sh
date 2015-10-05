@@ -14,13 +14,13 @@ NUM_JOBS=4
 
 # enter working directory. Needs to be on /ifs and mounted everywhere
 # /ifs/projects not possible as jenkins not part of projects group.
-workdir=/ifs/mirror/jenkins/CodeCollection
+WORKDIR=/ifs/mirror/jenkins/CGATCode
 
-if [ ! -d $workdir ]; then
-    mkdir $workdir
+if [ ! -d ${WORKDIR} ]; then
+    mkdir ${WORKDIR}
 fi
 
-cd $workdir
+cd ${WORKDIR}
 
 # setup virtual environment
 virtualenv --system-site-packages test_python
@@ -32,18 +32,18 @@ source test_python/bin/activate
 # a shared location.
 # TODO: checkout appropriate repository and branch from github
 if [ ! -d cgat ]; then
-    ln -s "$WORKSPACE" cgat
-    # git clone git@github.com:CGATOxford/cgat.git cgat
+    git clone ${WORKSPACE} cgat
 else
     echo "Using existing cgat repository"
 fi
 cd cgat
+git checkout ${GIT_BRANCH}
 git pull
 python setup.py build
 python setup.py develop
 
 # run tests
-cd $workdir/cgat
+cd ${WORKDIR}/cgat
 echo -e "restrict:\n    manifest:\n" > tests/_test_commandline.yaml
-py.test -n $NUM_JOBS tests/test_*.py
+py.test -n ${NUM_JOBS} tests/test_*.py
 
