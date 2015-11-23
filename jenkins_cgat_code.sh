@@ -50,5 +50,6 @@ echo "----------------------------------------------"
 # run tests
 cd ${WORKDIR}/cgat
 echo -e "restrict:\n    manifest:\n" > tests/_test_commandline.yaml
-py.test -n ${NUM_JOBS} tests/test_*.py
-
+# Issues with py.test and CGAT paths
+# py.test -n ${NUM_JOBS} tests/test_*.py
+nosetests --num-processes ${NUM_JOBS} tests/test_*.py
