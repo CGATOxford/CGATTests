@@ -45,6 +45,8 @@ python setup.py develop
 # some debugging information
 echo "----------------------------------------------"
 printenv
+python -c 'import numpy; print numpy.version.version'
+python -c 'import pysam; print pysam.__version__'
 echo "----------------------------------------------"
 
 # run tests
