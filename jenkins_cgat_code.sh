@@ -42,6 +42,11 @@ git pull
 python setup.py build
 python setup.py develop
 
+# some debugging information
+echo "----------------------------------------------"
+printenv
+echo "----------------------------------------------"
+
 # run tests
 cd ${WORKDIR}/cgat
 echo -e "restrict:\n    manifest:\n" > tests/_test_commandline.yaml
