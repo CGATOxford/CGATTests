@@ -37,8 +37,8 @@ else
     echo "Using existing cgat repository"
 fi
 cd cgat
+git fetch
 git checkout ${GIT_BRANCH}
-git pull
 python setup.py develop
 
 
@@ -51,8 +51,8 @@ else
     echo "Using existing CGATPipelines repository"
 fi
 cd CGATPipelines
+git fetch
 git checkout ${GIT_BRANCH}
-git pull
 python setup.py develop
 
 # run tests
