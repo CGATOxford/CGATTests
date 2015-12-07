@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 
 export DRMAA_LIBRARY_PATH=/ifs/apps/system/sge-6.2/lib/lx24-amd64/libdrmaa.so
 export SGE_ROOT=/ifs/apps/system/sge-6.2
@@ -31,14 +31,15 @@ source test_python/bin/activate
 # install CGAT code and scripts. These need to be installed on
 # a shared location.
 # TODO: checkout appropriate repository and branch from github
+rm -rf cgat
 if [ ! -d cgat ]; then
     git clone ${WORKSPACE} cgat
 else
     echo "Using existing cgat repository"
 fi
 cd cgat
+git fetch
 git checkout ${GIT_BRANCH}
-git pull
 python setup.py build
 python setup.py develop
 
