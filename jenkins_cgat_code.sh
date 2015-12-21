@@ -45,8 +45,11 @@ python setup.py develop
 # some debugging information
 echo "----------------------------------------------"
 printenv
+which python
 python -c 'import numpy; print numpy.version.version'
 python -c 'import pysam; print pysam.__version__'
+python -c 'import matplotlib; print matplotlib.__version__'
+python -c 'from matplotlib.externals.six.moves.urllib.parse import quote'
 echo "----------------------------------------------"
 
 # run tests
@@ -54,4 +57,10 @@ cd ${WORKDIR}/cgat
 echo -e "restrict:\n    manifest:\n" > tests/_test_commandline.yaml
 # Issues with py.test and CGAT paths
 # py.test -n ${NUM_JOBS} tests/test_*.py
-nosetests --processes ${NUM_JOBS} tests/test_*.py
+# nosetests --processes ${NUM_JOBS} tests/test_*.py
+# Running all tests with multiple processes fails, there seem to
+# issues with what libraries are being picked up (VE problems?)
+nosetests tests/test_import.py
+nosetests tests/test_style.py
+nosetests tests/test_commandline.py
+nosetests --processes ${NUM_JOBS} tests/test_scripts.py
