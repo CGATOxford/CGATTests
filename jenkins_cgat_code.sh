@@ -7,7 +7,7 @@ export SGE_ARCH=lx24_x86
 export SGE_CELL=default
 
 export MODULEPATH=/usr/share/Modules/modulefiles:/etc/modulefiles:/ifs/apps/modulefiles
-eval `modulecmd bash load apps/java apps/python apps/perl apps/graphlib bio/alignlib bio/all apps/emacs`
+eval `modulecmd bash load bio/all`
 
 # number of parallel jobs to run for testing
 NUM_JOBS=4
@@ -63,4 +63,4 @@ echo -e "restrict:\n    manifest:\n" > tests/_test_commandline.yaml
 nosetests tests/test_import.py
 nosetests tests/test_style.py
 nosetests tests/test_commandline.py
-nosetests --processes ${NUM_JOBS} tests/test_scripts.py
+nosetests tests/test_scripts.py
