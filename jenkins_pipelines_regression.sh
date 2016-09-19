@@ -3,6 +3,8 @@
 # Host to run pipeline from. Jenkins must be able to SSH into there.
 SUBMIT_HOST=jenkins@cgath1
 
+printenv
+
 ssh jenkins@cgath1 hostname
 ssh ${SUBMIT_HOST} hostname
 
