@@ -65,8 +65,8 @@ ln -fs $confdir/{pipeline.ini,conf.py} .
 # run pipelines
 
 echo "Starting pipelines"
-ssh ${EXECUTION_HOST} "cd ${workdir} && python CGATPipelines/CGATPipelines/pipeline_testing.py -v 5 -p 10 make full"
+ssh ${SUBMIT_HOST} "cd ${workdir} && python CGATPipelines/CGATPipelines/pipeline_testing.py -v 5 -p 10 make full"
 
 echo "Building report"
-ssh ${EXECUTION_HOST} "cd ${workdir} && python CGATPipelines/CGATPipelines/pipeline_testing.py -v 5 -p 10 make build_report"
+ssh ${SUBMIT_HOST} "cd ${workdir} && python CGATPipelines/CGATPipelines/pipeline_testing.py -v 5 -p 10 make build_report"
 
