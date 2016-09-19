@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Host to run pipeline from. Jenkins must be able to SSH into there.
+SUBMIT_HOST=jenkins@cgath1
+
 export DRMAA_LIBRARY_PATH=/ifs/apps/system/sge-6.2/lib/lx24-amd64/libdrmaa.so
 export SGE_ROOT=/ifs/apps/system/sge-6.2
 export SGE_CLUSTER_NAME=cgat
@@ -59,10 +62,11 @@ rm -rf ${workdir}/config
 git clone git@github.com:CGATOxford/CGATTests.git config
 ln -fs $confdir/{pipeline.ini,conf.py} .
 
-qrsh 'echo "running on `hostname`"'
-
 # run pipelines
+
 echo "Starting pipelines"
-python CGATPipelines/CGATPipelines/pipeline_testing.py -v 5 -p 10 make full
+ssh ${EXECUTION_HOST} "cd ${workdir} && python CGATPipelines/CGATPipelines/pipeline_testing.py -v 5 -p 10 make full"
+
 echo "Building report"
-python CGATPipelines/CGATPipelines/pipeline_testing.py -v 5 -p 10 make build_report
+ssh ${EXECUTION_HOST} "cd ${workdir} && python CGATPipelines/CGATPipelines/pipeline_testing.py -v 5 -p 10 make build_report"
+
