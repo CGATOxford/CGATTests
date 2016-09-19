@@ -5,8 +5,8 @@ SUBMIT_HOST=jenkins@cgath1
 
 printenv
 
-ssh jenkins@cgath1 hostname
-ssh ${SUBMIT_HOST} hostname
+ssh -v jenkins@cgath1 hostname
+ssh -v ${SUBMIT_HOST} hostname
 
 export DRMAA_LIBRARY_PATH=/ifs/apps/system/sge-6.2/lib/lx24-amd64/libdrmaa.so
 export SGE_ROOT=/ifs/apps/system/sge-6.2
