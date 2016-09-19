@@ -3,6 +3,9 @@
 # Host to run pipeline from. Jenkins must be able to SSH into there.
 SUBMIT_HOST=jenkins@cgath1
 
+ssh jenkins@cgath1 hostname
+ssh ${SUBMIT_HOST} hostname
+
 export DRMAA_LIBRARY_PATH=/ifs/apps/system/sge-6.2/lib/lx24-amd64/libdrmaa.so
 export SGE_ROOT=/ifs/apps/system/sge-6.2
 export SGE_CLUSTER_NAME=cgat
