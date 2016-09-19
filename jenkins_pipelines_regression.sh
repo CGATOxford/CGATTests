@@ -55,8 +55,11 @@ cd $workdir
 
 # copy test configuration files
 cd $workdir
+rm -rf ${workdir}/config
 git clone git@github.com:CGATOxford/CGATTests.git config
 ln -fs $confdir/{pipeline.ini,conf.py} .
+
+qrsh 'echo "running on `hostname`"'
 
 # run pipelines
 echo "Starting pipelines"
