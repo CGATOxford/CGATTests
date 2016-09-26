@@ -31,6 +31,9 @@ source test_python/bin/activate
 # install CGAT code and scripts. These need to be installed on
 # a shared location.
 # TODO: checkout appropriate repository and branch from github
+# update does not work
+rm -rf cgat
+
 if [ ! -d cgat ]; then
     git clone ${WORKSPACE} cgat
 else
