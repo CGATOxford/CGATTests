@@ -57,6 +57,9 @@ git fetch
 git checkout ${GIT_BRANCH}
 python setup.py develop
 
+PYTHON=`which python`
+NOSE=`which nosetests`
+
 # some debugging information
 echo "----------------------------------------------"
 printenv
@@ -65,11 +68,13 @@ python -c 'import numpy; print numpy.version.version'
 python -c 'import pysam; print pysam.__version__'
 python -c 'import matplotlib; print matplotlib.__version__'
 python -c 'from matplotlib.externals.six.moves.urllib.parse import quote'
+echo "python is $PYTHON"
+echo "nose is $NOSE"
 echo "----------------------------------------------"
 
 # run tests
 cd ${WORKDIR}/CGATPipelines
 echo -e "restrict:\n    manifest:\n" > tests/_test_commandline.yaml
 # py.test -n ${NUM_JOBS} tests/test_*.py
-nosetests tests/test_*.py
+$PYTHON $NOSE -v tests/test_*.py
 
