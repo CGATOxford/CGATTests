@@ -30,7 +30,8 @@ source test_python/bin/activate
 
 # install CGAT code and scripts. These need to be installed on
 # a shared location.
-cd ${WORKDIR}
+rm -rf cgat
+
 if [ ! -d cgat ]; then
     git clone ${WORKSPACE}/cgat cgat
 else
@@ -41,10 +42,11 @@ git fetch
 git checkout ${GIT_BRANCH}
 python setup.py develop
 
-
 # install CGATPipelines code and scripts. These need to be installed on
 # a shared location.
 cd ${WORKDIR}
+rm -rf CGATPipelines
+
 if [ ! -d CGATPipelines ]; then
     git clone ${WORKSPACE}/CGATPipelines CGATPipelines
 else
@@ -54,6 +56,16 @@ cd CGATPipelines
 git fetch
 git checkout ${GIT_BRANCH}
 python setup.py develop
+
+# some debugging information
+echo "----------------------------------------------"
+printenv
+which python
+python -c 'import numpy; print numpy.version.version'
+python -c 'import pysam; print pysam.__version__'
+python -c 'import matplotlib; print matplotlib.__version__'
+python -c 'from matplotlib.externals.six.moves.urllib.parse import quote'
+echo "----------------------------------------------"
 
 # run tests
 cd ${WORKDIR}/CGATPipelines
