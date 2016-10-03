@@ -51,10 +51,6 @@ inifile = os.path.join(os.path.dirname(CGATPipelines.__file__),
 
 PARAMS = P.getParameters([inifile, "pipeline.ini"])
 
-
-def setup(app):
-    app.add_config_value('PARAMS', {}, True)
-
 ################################################################
 ################################################################
 ################################################################

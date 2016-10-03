@@ -70,5 +70,5 @@ echo "Starting pipelines"
 ssh ${SUBMIT_HOST} "cd ${workdir} && source test_python/bin/activate && python CGATPipelines/CGATPipelines/pipeline_testing.py -v 5 -p 10 make full"
 
 echo "Building report"
-ssh ${SUBMIT_HOST} "cd ${workdir} && source test_python/bin/activate && python CGATPipelines/CGATPipelines/pipeline_testing.py -v 5 -p 10 make build_report"
+python CGATPipelines/CGATPipelines/pipeline_testing.py -v 5 -p 10 make build_report
 
