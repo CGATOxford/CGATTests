@@ -1,4 +1,4 @@
-#!/bin/bash -uxe
+#!/bin/bash -xe
 
 export DRMAA_LIBRARY_PATH=/ifs/apps/system/sge-6.2/lib/lx24-amd64/libdrmaa.so
 export SGE_ROOT=/ifs/apps/system/sge-6.2
