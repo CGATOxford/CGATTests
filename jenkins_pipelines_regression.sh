@@ -35,9 +35,11 @@ virtualenv --system-site-packages test_python
 # activate virtual environment
 source test_python/bin/activate
 
+# AH: install from scratch
 # install CGAT code and scripts. These need to be installed on
 # a shared location.
 # TODO: checkout appropriate repository and branch from github
+rm -rf cgat
 if [ ! -d cgat ]; then
     git clone git@github.com:CGATOxford/cgat.git cgat
 else
@@ -48,6 +50,7 @@ git pull
 python setup.py develop
 cd $workdir
 
+rm -rf CGATPipelines
 if [ ! -d CGATPipelines ]; then
     git clone git@github.com:CGATOxford/CGATPipelines.git CGATPipelines
 else
