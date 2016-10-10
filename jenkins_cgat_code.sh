@@ -21,30 +21,15 @@ if [ ! -d ${WORKDIR} ]; then
 fi
 
 cd ${WORKDIR}
-
 # setup virtual environment
 virtualenv --system-site-packages test_python
 
 # activate virtual environment
 source test_python/bin/activate
 
-# install CGAT code and scripts. These need to be installed on
-# a shared location.
-# TODO: checkout appropriate repository and branch from github
-# update does not work
-rm -rf cgat
+cd cgat && python setup.py develop
 
-if [ ! -d cgat ]; then
-    git clone ${WORKSPACE} cgat
-else
-    echo "Using existing cgat repository"
-fi
-cd cgat
-git fetch
-git checkout ${GIT_BRANCH}
-python setup.py build
-python setup.py develop
-
+cd ${WORKDIR}
 PYTHON=`which python`
 NOSE=`which nosetests`
 

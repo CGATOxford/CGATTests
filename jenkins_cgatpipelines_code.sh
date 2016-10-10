@@ -28,34 +28,15 @@ virtualenv --system-site-packages test_python
 # activate virtual environment
 source test_python/bin/activate
 
-# install CGAT code and scripts. These need to be installed on
-# a shared location.
-rm -rf cgat
-
-if [ ! -d cgat ]; then
-    git clone ${WORKSPACE}/cgat cgat
-else
-    echo "Using existing cgat repository"
-fi
-cd cgat
-git fetch
-git checkout ${GIT_BRANCH}
-python setup.py develop
+cd ${WORKDIR}
+cd cgat && python setup.py develop
 
 # install CGATPipelines code and scripts. These need to be installed on
 # a shared location.
 cd ${WORKDIR}
-rm -rf CGATPipelines
+cd CGATPipelines &&python setup.py develop
 
-if [ ! -d CGATPipelines ]; then
-    git clone ${WORKSPACE}/CGATPipelines CGATPipelines
-else
-    echo "Using existing CGATPipelines repository"
-fi
-cd CGATPipelines
-git fetch
-git checkout ${GIT_BRANCH}
-python setup.py develop
+cd ${WORKDIR}
 
 PYTHON=`which python`
 NOSE=`which nosetests`
