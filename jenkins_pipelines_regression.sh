@@ -33,6 +33,7 @@ source test_python/bin/activate
 
 cd $WORKSPACE
 cd cgat && python setup.py develop
+cgat cgat_rebuild_extensions
 
 cd $WORKSPACE
 cd CGATPipelines && python setup.py develop
