@@ -16,18 +16,12 @@ eval `modulecmd bash load apps/java apps/python apps/perl apps/graphlib bio/alig
 
 # enter working directory. Needs to be on /ifs and mounted everywhere
 # /ifs/projects not possible as jenkins not part of projects group.
-workdir=/ifs/mirror/jenkins/PipelineRegressionTests
+cd $WORKSPACE
 confdir=/ifs/mirror/jenkins/config
 
-if [ ! -d $workdir ]; then
-    mkdir $workdir
-else
-    if [ $JENKINS_ONLY_UPDATE == "false" ]; then
-	rm -rf $workdir/test_* $workdir/prereq_* csvdb *.log md5_*
-    fi
+if [ $JENKINS_ONLY_UPDATE == "false" ]; then
+    rm -rf $WORKSPACE/test_* $WORKSPACE/prereq_* csvdb *.log md5_*
 fi
-
-cd $workdir
 
 # setup virtual environment
 virtualenv --system-site-packages test_python
@@ -37,22 +31,22 @@ printenv
 # activate virtual environment
 source test_python/bin/activate
 
-cd $workdir
+cd $WORKSPACE
 cd cgat && python setup.py develop
 
-cd $workdir
+cd $WORKSPACE
 cd CGATPipelines && python setup.py develop
 
 # copy test configuration files
-cd $workdir
-rm -rf ${workdir}/config
+cd $WORKSPACE
+rm -rf ${WORKSPACE}/config
 git clone git@github.com:CGATOxford/CGATTests.git config
 ln -fs $confdir/{pipeline.ini,conf.py} .
 
 # run pipelines
 
 echo "Starting pipelines"
-ssh ${SUBMIT_HOST} "cd ${workdir} && source test_python/bin/activate && python CGATPipelines/CGATPipelines/pipeline_testing.py -v 5 -p 10 make full"
+ssh ${SUBMIT_HOST} "cd ${WORKSPACE} && source test_python/bin/activate && python CGATPipelines/CGATPipelines/pipeline_testing.py -v 5 -p 10 make full"
 
 echo "Building report"
 python CGATPipelines/CGATPipelines/pipeline_testing.py -v 5 -p 10 make build_report
