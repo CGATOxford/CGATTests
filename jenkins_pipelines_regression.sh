@@ -17,7 +17,7 @@ eval `modulecmd bash load apps/java apps/python apps/perl apps/graphlib bio/alig
 # enter working directory. Needs to be on /ifs and mounted everywhere
 # /ifs/projects not possible as jenkins not part of projects group.
 cd $WORKSPACE
-confdir=/ifs/mirror/jenkins/config
+confdir="${WORKSPACE}/config"
 
 if [ $JENKINS_ONLY_UPDATE == "false" ]; then
     rm -rf $WORKSPACE/test_* $WORKSPACE/prereq_* csvdb *.log md5_*
@@ -40,9 +40,7 @@ cd CGATPipelines && python setup.py develop
 
 # copy test configuration files
 cd $WORKSPACE
-rm -rf ${WORKSPACE}/config
-git clone git@github.com:CGATOxford/CGATTests.git config
-ln -fs $confdir/{pipeline.ini,conf.py} .
+ln -fs ${confdir}/{pipeline.ini,conf.py} .
 
 # run pipelines
 
@@ -51,4 +49,3 @@ ssh ${SUBMIT_HOST} "cd ${WORKSPACE} && source test_python/bin/activate && python
 
 echo "Building report"
 python CGATPipelines/CGATPipelines/pipeline_testing.py -v 5 -p 10 make build_report
-
