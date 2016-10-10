@@ -1,4 +1,4 @@
-#!/bin/bash -uxe
+#!/bin/bash -xe
 
 # Host to run pipeline from. Jenkins must be able to SSH into there.
 SUBMIT_HOST=jenkins@cgath1
@@ -31,6 +31,8 @@ cd $workdir
 
 # setup virtual environment
 virtualenv --system-site-packages test_python
+
+printenv
 
 # activate virtual environment
 source test_python/bin/activate
