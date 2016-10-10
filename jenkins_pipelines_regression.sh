@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -uxe
 
 # Host to run pipeline from. Jenkins must be able to SSH into there.
 SUBMIT_HOST=jenkins@cgath1
@@ -35,11 +35,11 @@ virtualenv --system-site-packages test_python
 # activate virtual environment
 source test_python/bin/activate
 
-cd cgat
-python setup.py develop
+cd $workdir
+cd cgat && python setup.py develop
 
-cd CGATPipelines
-python setup.py develop
+cd $workdir
+cd CGATPipelines && python setup.py develop
 
 # copy test configuration files
 cd $workdir
