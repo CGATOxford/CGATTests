@@ -19,15 +19,17 @@ eval `modulecmd bash load apps/java apps/python apps/perl apps/graphlib bio/alig
 cd $WORKSPACE
 confdir="${WORKSPACE}/config"
 
-# clear up previous tests
-if [ $JENKINS_ONLY_UPDATE == "false" ]; then
-    rm -rf $WORKSPACE/test_* $WORKSPACE/prereq_* csvdb *.log md5_*
-fi
 
 if [ $JENKINS_CLEAR_TESTS ]; then
    for x in $JENKINS_CLEAR_TESTS; do
       rm -rf $WORKSPACE/test_$x
    done
+   JENKINS_ONLY_UPDATE="false"
+fi
+
+# clear up previous tests
+if [ $JENKINS_ONLY_UPDATE == "false" ]; then
+    rm -rf $WORKSPACE/test_* $WORKSPACE/prereq_* csvdb *.log md5_*
 fi
 
 # setup virtual environment
