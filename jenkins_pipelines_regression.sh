@@ -22,7 +22,8 @@ confdir="${WORKSPACE}/config"
 
 if [ $JENKINS_CLEAR_TESTS ]; then
    for x in $JENKINS_CLEAR_TESTS; do
-      rm -rf $WORKSPACE/test_$x
+      echo "removing old test data for test: $x"
+      rm -rf $WORKSPACE/test_$x.dir $WORKSPACE/test_$x.tgz $WORKSPACE/test_$x.log
    done
    JENKINS_ONLY_UPDATE="false"
 fi
