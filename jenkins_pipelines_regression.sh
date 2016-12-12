@@ -25,7 +25,7 @@ if [ $JENKINS_CLEAR_TESTS ]; then
       echo "removing old test data for test: $x"
       rm -rf $WORKSPACE/test_$x.dir $WORKSPACE/test_$x.tgz $WORKSPACE/test_$x.log
    done
-   JENKINS_ONLY_UPDATE="false"
+   JENKINS_ONLY_UPDATE="true"
 fi
 
 # clear up previous tests
