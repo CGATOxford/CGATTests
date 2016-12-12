@@ -48,6 +48,16 @@ cd $WORKSPACE/CGATPipelines && python setup.py develop
 cd $WORKSPACE
 ln -fs ${confdir}/{pipeline.ini,conf.py} .
 
+error_report() {
+    echo "Error detected"
+    echo "Dumping log traces of test pipelines:"
+    grep "ERROR" *.dir/pipeline.log
+    echo "Dumping error messages from pipeline_testing/pipeline.log:"
+    sed -n '/start of error messages$/,/end of error messages$/p' pipeline.log
+}
+
+trap 'error_report' ERR
+
 # run pipelines
 
 echo "Starting pipelines"
