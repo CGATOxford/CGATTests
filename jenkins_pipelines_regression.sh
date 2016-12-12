@@ -42,6 +42,7 @@ printenv
 source test_python/bin/activate
 
 cd $WORKSPACE/cgat && python setup.py install
+cgat cgat_rebuild_extensions
 cd $WORKSPACE/CGATPipelines && python setup.py develop
 
 # copy test configuration files
