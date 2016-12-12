@@ -14,6 +14,9 @@ export SGE_CELL=default
 export MODULEPATH=/usr/share/Modules/modulefiles:/etc/modulefiles:/ifs/apps/modulefiles
 eval `modulecmd bash load apps/java apps/python apps/perl apps/graphlib bio/alignlib bio/all apps/emacs`
 
+DIR_PUBLISH=/ifs/public/cgatpipelines/jenkins_report/
+URL_SUB="s/\/ifs\/mirror\/jenkins\/PipelineRegressionTests\/report\/html/http:\/\/www.cgat.org\/downloads\/public\/cgatpipelines\/jenkins_report/"
+
 # enter working directory. Needs to be on /ifs and mounted everywhere
 # /ifs/projects not possible as jenkins not part of projects group.
 cd $WORKSPACE
@@ -66,3 +69,7 @@ ssh ${SUBMIT_HOST} "cd ${WORKSPACE} && source test_python/bin/activate && python
 
 echo "Building report"
 python CGATPipelines/CGATPipelines/pipeline_testing.py -v 5 -p 10 make build_report
+
+echo "Publishing report"
+cp -arf report/html/* $(DIR_PUBLISH)/
+find $(DIR_PUBLISH)/ -name "*.html" -exec perl -p -i -e $(URL_SUB) {} \;
