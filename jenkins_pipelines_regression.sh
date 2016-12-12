@@ -22,7 +22,6 @@ URL_SUB="s/\/ifs\/mirror\/jenkins\/PipelineRegressionTests\/report\/html/http:\/
 cd $WORKSPACE
 confdir="${WORKSPACE}/config"
 
-
 if [ $JENKINS_CLEAR_TESTS ]; then
    for x in $JENKINS_CLEAR_TESTS; do
       echo "removing old test data for test: $x"
@@ -44,7 +43,9 @@ printenv
 # activate virtual environment
 source test_python/bin/activate
 
+# at the moment, use develop so that the perl scripts are found.
 cd $WORKSPACE/cgat && python setup.py install
+cd $WORKSPACE/cgat && python setup.py develop
 cgat cgat_rebuild_extensions
 cd $WORKSPACE/CGATPipelines && python setup.py develop
 
