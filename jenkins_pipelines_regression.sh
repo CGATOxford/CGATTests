@@ -72,5 +72,5 @@ echo "Building report"
 python CGATPipelines/CGATPipelines/pipeline_testing.py -v 5 -p 10 make build_report
 
 echo "Publishing report"
-cp -arf report/html/* $(DIR_PUBLISH)/
-find $(DIR_PUBLISH)/ -name "*.html" -exec perl -p -i -e $(URL_SUB) {} \;
+cp -arf report/html/* ${DIR_PUBLISH}/
+find ${DIR_PUBLISH}/ -name "*.html" -exec perl -p -i -e ${URL_SUB} {} \;
