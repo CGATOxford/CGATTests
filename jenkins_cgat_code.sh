@@ -37,6 +37,7 @@ fi
 
 cd ${WORKDIR}
 # setup virtual environment
+rm -rf test_python
 PYTHON_EXEC=`/usr/bin/which ${PYTHON_EXECUTABLE}`
 virtualenv --python=${PYTHON_EXEC} --system-site-packages test_python
 

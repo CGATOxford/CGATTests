@@ -51,6 +51,7 @@ if [ $JENKINS_ONLY_UPDATE == "false" ]; then
 fi
 
 # setup virtual environment
+rm -rf test_python
 PYTHON_EXEC=`/usr/bin/which ${PYTHON_EXECUTABLE}`
 virtualenv --python=${PYTHON_EXEC} --system-site-packages test_python
 
