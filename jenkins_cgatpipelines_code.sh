@@ -32,7 +32,7 @@ NUM_JOBS=4
 WORKDIR=/ifs/mirror/jenkins/${JOB_NAME}
 
 if [ ! -d ${WORKDIR} ]; then
-    mkdir ${WORKDIR}
+    mkdir -p ${WORKDIR}
 fi
 
 cd ${WORKDIR}

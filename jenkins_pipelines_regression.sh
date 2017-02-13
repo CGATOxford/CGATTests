@@ -34,20 +34,26 @@ URL_SUB="s/\/ifs\/mirror\/jenkins\/PipelineRegressionTests\/report\/html/http:\/
 
 # enter working directory. Needs to be on /ifs and mounted everywhere
 # /ifs/projects not possible as jenkins not part of projects group.
-cd $WORKSPACE
+WORKDIR=/ifs/mirror/jenkins/${JOB_NAME}
+
+if [ ! -d ${WORKDIR} ]; then
+    mkdir -p ${WORKDIR}
+fi
+
+cd $WORKDIR
 confdir="${WORKSPACE}/config"
 
 if [ $JENKINS_CLEAR_TESTS ]; then
    for x in $JENKINS_CLEAR_TESTS; do
       echo "removing old test data for test: $x"
-      rm -rf $WORKSPACE/test_$x.dir $WORKSPACE/test_$x.tgz $WORKSPACE/test_$x.log
+      rm -rf $WORKDIR/test_$x.dir $WORKDIR/test_$x.tgz $WORKDIR/test_$x.log
    done
    JENKINS_ONLY_UPDATE="true"
 fi
 
 # clear up previous tests
 if [ $JENKINS_ONLY_UPDATE == "false" ]; then
-    rm -rf $WORKSPACE/test_* $WORKSPACE/prereq_* csvdb *.log md5_*
+    rm -rf $WORKDIR/test_* $WORKDIR/prereq_* csvdb *.log md5_*
 fi
 
 # setup virtual environment
@@ -61,11 +67,11 @@ printenv
 source test_python/bin/activate
 
 # at the moment, use develop so that the perl scripts are found.
-cd $WORKSPACE/cgat && python setup.py install
-cd $WORKSPACE/CGATPipelines && python setup.py develop
+cd $WORKDIR/cgat && python setup.py install
+cd $WORKDIR/CGATPipelines && python setup.py develop
 
 # copy test configuration files
-cd $WORKSPACE
+cd $WORKDIR
 ln -fs ${confdir}/{pipeline.ini,conf.py} .
 
 error_report() {
