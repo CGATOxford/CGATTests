@@ -29,7 +29,6 @@ NUM_JOBS=4
 
 # enter working directory. Needs to be on /ifs and mounted everywhere
 # /ifs/projects not possible as jenkins not part of projects group.
-echo ${WORKSPACE}
 WORKDIR=/ifs/mirror/jenkins/${JOB_NAME}
 
 if [ ! -d ${WORKDIR} ]; then
@@ -46,15 +45,15 @@ virtualenv --python=${PYTHON_EXEC} --system-site-packages test_python
 # activate virtual environment
 source test_python/bin/activate
 
-cd ${WORKDIR}
+cd ${WORKSPACE}
 cd cgat && python setup.py develop
 
 # install CGATPipelines code and scripts. These need to be installed on
 # a shared location.
-cd ${WORKDIR}
+cd ${WORKSPACE}
 cd CGATPipelines && python setup.py develop
 
-cd ${WORKDIR}
+cd ${WORKSPACE}/CGATPipelines
 
 PYTHON=`which python`
 NOSE=`which nosetests`
