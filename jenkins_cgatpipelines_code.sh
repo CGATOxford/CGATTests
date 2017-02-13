@@ -6,8 +6,23 @@ export SGE_CLUSTER_NAME=cgat
 export SGE_ARCH=lx24_x86
 export SGE_CELL=default
 
+if [ -z "$JENKINS_PYTHON_VERSION" ] ; then
+    JENKINS_PYTHON_VERSION="2.7"
+fi
+
+if [[ $JENKINS_PYTHON_VERSION == "2.7" ]] ; then
+    PYTHON_MODULES="apps/python";
+    PYTHON_EXECUTABLE="python2.7";
+elif [[ $JENKINS_PYTHON_VERSION == "3.5" ]] ; then
+    PYTHON_MODULES="apps/python3";
+    PYTHON_EXECUTABLE="python3.5";
+else
+    echo "unsupported python version ${JENKINS_PYTHON_VERSION}"
+    exit 1
+fi
+
 export MODULEPATH=/usr/share/Modules/modulefiles:/etc/modulefiles:/ifs/apps/modulefiles
-eval `modulecmd bash load apps/java apps/python apps/perl apps/graphlib bio/alignlib bio/all apps/emacs`
+eval `modulecmd bash load ${PYTHON_MODULES} apps/java apps/perl apps/graphlib bio/alignlib bio/all apps/emacs`
 
 # number of parallel jobs to run for testing
 NUM_JOBS=4
@@ -23,7 +38,7 @@ fi
 cd ${WORKDIR}
 
 # setup virtual environment
-virtualenv --system-site-packages test_python
+virtualenv --python=${PYTHON_EXECUTABLE} --system-site-packages test_python
 
 # activate virtual environment
 source test_python/bin/activate
@@ -34,7 +49,7 @@ cd cgat && python setup.py develop
 # install CGATPipelines code and scripts. These need to be installed on
 # a shared location.
 cd ${WORKDIR}
-cd CGATPipelines &&python setup.py develop
+cd CGATPipelines && python setup.py develop
 
 cd ${WORKDIR}
 
