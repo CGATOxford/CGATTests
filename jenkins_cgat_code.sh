@@ -6,8 +6,21 @@ export SGE_CLUSTER_NAME=cgat
 export SGE_ARCH=lx24_x86
 export SGE_CELL=default
 
+if [ -z "$JENKINS_PYTHON_VERSION" ] ; then
+    JENKINS_PYTHON_VERSION="2.7"
+fi
+
+if [[ $JENKINS_PYTHON_VERSION == "2.7" ]] ; then
+    PYTHON_MODULES="apps/python";
+elif [[ $JENKINS_PYTHON_VERSION == "3.5" ]] ; then
+    PYTHON_MODULES="apps/python3";
+else
+    echo "unsupported python version ${JENKINS_PYTHON_VERSION}"
+    exit 1
+fi
+
 export MODULEPATH=/usr/share/Modules/modulefiles:/etc/modulefiles:/ifs/apps/modulefiles
-eval `modulecmd bash load bio/all`
+eval `modulecmd bash load ${PYTHON_MODULES} bio/all`
 
 # number of parallel jobs to run for testing
 NUM_JOBS=4

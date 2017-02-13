@@ -11,8 +11,21 @@ export SGE_CLUSTER_NAME=cgat
 export SGE_ARCH=lx24_x86
 export SGE_CELL=default
 
+if [ -z "$JENKINS_PYTHON_VERSION" ] ; then
+    JENKINS_PYTHON_VERSION="2.7"
+fi
+
+if [[ $JENKINS_PYTHON_VERSION == "2.7" ]] ; then
+    PYTHON_MODULES="apps/python";
+elif [[ $JENKINS_PYTHON_VERSION == "3.5" ]] ; then
+    PYTHON_MODULES="apps/python3";
+else
+    echo "unsupported python version ${JENKINS_PYTHON_VERSION}"
+    exit 1
+fi
+
 export MODULEPATH=/usr/share/Modules/modulefiles:/etc/modulefiles:/ifs/apps/modulefiles
-eval `modulecmd bash load apps/java apps/python apps/perl apps/graphlib bio/alignlib bio/all apps/emacs`
+eval `modulecmd bash load $(PYTHON_MODULES) apps/java apps/perl apps/graphlib bio/alignlib bio/all`
 
 DIR_PUBLISH=/ifs/public/cgatpipelines/jenkins_report/
 URL_SUB="s/\/ifs\/mirror\/jenkins\/PipelineRegressionTests\/report\/html/http:\/\/www.cgat.org\/downloads\/public\/cgatpipelines\/jenkins_report/"
