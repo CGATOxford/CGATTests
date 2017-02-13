@@ -17,8 +17,10 @@ fi
 
 if [[ $JENKINS_PYTHON_VERSION == "2.7" ]] ; then
     PYTHON_MODULES="apps/python";
+    PYTHON_EXECUTABLE="python2.7";
 elif [[ $JENKINS_PYTHON_VERSION == "3.5" ]] ; then
     PYTHON_MODULES="apps/python3";
+    PYTHON_EXECUTABLE="python3.5";
 else
     echo "unsupported python version ${JENKINS_PYTHON_VERSION}"
     exit 1
@@ -49,7 +51,7 @@ if [ $JENKINS_ONLY_UPDATE == "false" ]; then
 fi
 
 # setup virtual environment
-virtualenv --system-site-packages test_python
+virtualenv --python=${PYTHON_EXECUTABLE} --system-site-packages test_python
 
 printenv
 
