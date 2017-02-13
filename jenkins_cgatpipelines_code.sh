@@ -38,7 +38,8 @@ fi
 cd ${WORKDIR}
 
 # setup virtual environment
-virtualenv --python=${PYTHON_EXECUTABLE} --system-site-packages test_python
+PYTHON_EXEC=`/usr/bin/which ${PYTHON_EXECUTABLE}`
+virtualenv --python=${PYTHON_EXEC} --system-site-packages test_python
 
 # activate virtual environment
 source test_python/bin/activate
