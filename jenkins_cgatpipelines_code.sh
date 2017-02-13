@@ -29,6 +29,7 @@ NUM_JOBS=4
 
 # enter working directory. Needs to be on /ifs and mounted everywhere
 # /ifs/projects not possible as jenkins not part of projects group.
+echo ${WORKSPACE}
 WORKDIR=/ifs/mirror/jenkins/${JOB_NAME}
 
 if [ ! -d ${WORKDIR} ]; then
