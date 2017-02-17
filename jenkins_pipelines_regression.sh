@@ -27,7 +27,7 @@ else
 fi
 
 export MODULEPATH=/usr/share/Modules/modulefiles:/etc/modulefiles:/ifs/apps/modulefiles
-eval `modulecmd bash load $(PYTHON_MODULES) apps/java apps/perl apps/graphlib bio/alignlib bio/all`
+eval `modulecmd bash load ${PYTHON_MODULES} apps/java apps/perl apps/graphlib bio/alignlib bio/all`
 
 DIR_PUBLISH=/ifs/public/cgatpipelines/jenkins_report/
 URL_SUB="s/\/ifs\/mirror\/jenkins\/PipelineRegressionTests\/report\/html/http:\/\/www.cgat.org\/downloads\/public\/cgatpipelines\/jenkins_report/"
@@ -41,7 +41,7 @@ if [ ! -d ${WORKDIR} ]; then
 fi
 
 cd $WORKDIR
-confdir="${WORKSPACE}/config"
+confdir="${WORKDIR}/config"
 
 if [ $JENKINS_CLEAR_TESTS ]; then
    for x in $JENKINS_CLEAR_TESTS; do
@@ -67,8 +67,8 @@ printenv
 source test_python/bin/activate
 
 # at the moment, use develop so that the perl scripts are found.
-cd $WORKDIR/cgat && python setup.py install
-cd $WORKDIR/CGATPipelines && python setup.py develop
+cd $WORKSPACE/cgat && python setup.py install
+cd $WORKSPACE/CGATPipelines && python setup.py develop
 
 # copy test configuration files
 cd $WORKDIR
@@ -87,9 +87,10 @@ trap 'error_report' ERR
 # run pipelines
 
 echo "Starting pipelines"
-ssh ${SUBMIT_HOST} "cd ${WORKSPACE} && source test_python/bin/activate && python CGATPipelines/CGATPipelines/pipeline_testing.py -v 5 -p 10 make full"
+ssh ${SUBMIT_HOST} "cd ${WORKSPACE} && source ${WORKDIR}/test_python/bin/activate && python CGATPipelines/CGATPipelines/pipeline_testing.py -v 5 -p 10 make full"
 
 echo "Building report"
+cd $WORKSPACE
 python CGATPipelines/CGATPipelines/pipeline_testing.py -v 5 -p 10 make build_report
 
 echo "Publishing report"
