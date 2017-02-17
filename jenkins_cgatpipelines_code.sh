@@ -53,8 +53,6 @@ cd cgat && python setup.py develop
 cd ${WORKSPACE}
 cd CGATPipelines && python setup.py develop
 
-cd ${WORKSPACE}/CGATPipelines
-
 PYTHON=`which python`
 NOSE=`which nosetests`
 
@@ -71,7 +69,7 @@ echo "nose is $NOSE"
 echo "----------------------------------------------"
 
 # run tests
-cd ${WORKDIR}/CGATPipelines
+cd ${WORKSPACE}/CGATPipelines
 echo -e "restrict:\n    manifest:\n" > tests/_test_commandline.yaml
 # py.test -n ${NUM_JOBS} tests/test_*.py
 $PYTHON $NOSE -v tests/test_*.py
