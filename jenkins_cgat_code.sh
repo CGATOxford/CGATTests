@@ -45,7 +45,7 @@ virtualenv --python=${PYTHON_EXEC} --system-site-packages test_python
 source test_python/bin/activate
 
 cd ${WORKSPACE}
-cd cgat && python setup.py develop
+python setup.py develop
 
 PYTHON=`which python`
 NOSE=`which nosetests`
@@ -63,7 +63,7 @@ echo "nose is $NOSE"
 echo "----------------------------------------------"
 
 # run tests
-cd ${WORKSPACE}/cgat
+cd ${WORKSPACE}
 echo -e "restrict:\n    manifest:\n" > tests/_test_commandline.yaml
 # Issues with py.test and CGAT paths
 # py.test -n ${NUM_JOBS} tests/test_*.py
