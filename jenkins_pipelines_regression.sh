@@ -34,26 +34,21 @@ URL_SUB="s/\/ifs\/mirror\/jenkins\/PipelineRegressionTests\/report\/html/http:\/
 
 # enter working directory. Needs to be on /ifs and mounted everywhere
 # /ifs/projects not possible as jenkins not part of projects group.
-WORKDIR=/ifs/mirror/jenkins/${JOB_NAME}
+# configured custom workspace folder as advanced setting via Jenkins web GUI
 
-if [ ! -d ${WORKDIR} ]; then
-    mkdir -p ${WORKDIR}
-fi
-
-cd $WORKDIR
-confdir="${WORKDIR}/config"
+cd ${WORKSPACE}
 
 if [ $JENKINS_CLEAR_TESTS ]; then
    for x in $JENKINS_CLEAR_TESTS; do
       echo "removing old test data for test: $x"
-      rm -rf $WORKDIR/test_$x.dir $WORKDIR/test_$x.tgz $WORKDIR/test_$x.log
+      rm -rf test_$x.dir test_$x.tgz test_$x.log
    done
    JENKINS_ONLY_UPDATE="true"
 fi
 
 # clear up previous tests
 if [ $JENKINS_ONLY_UPDATE == "false" ]; then
-    rm -rf $WORKDIR/test_* $WORKDIR/prereq_* csvdb *.log md5_*
+    rm -rf test_* prereq_* csvdb *.log md5_*
 fi
 
 # setup virtual environment
@@ -67,12 +62,11 @@ printenv
 source test_python/bin/activate
 
 # at the moment, use develop so that the perl scripts are found.
-cd $WORKSPACE/cgat && python setup.py install
-cd $WORKSPACE/CGATPipelines && python setup.py develop
+cd cgat && python setup.py install
+cd CGATPipelines && python setup.py develop
 
 # copy test configuration files
-cd $WORKDIR
-ln -fs ${confdir}/{pipeline.ini,conf.py} .
+ln -fs config/{pipeline.ini,conf.py} .
 
 error_report() {
     echo "Error detected"
@@ -87,10 +81,10 @@ trap 'error_report' ERR
 # run pipelines
 
 echo "Starting pipelines"
-ssh ${SUBMIT_HOST} "cd ${WORKSPACE} && source ${WORKDIR}/test_python/bin/activate && python CGATPipelines/CGATPipelines/pipeline_testing.py -v 5 -p 10 make full"
+ssh ${SUBMIT_HOST} "cd ${WORKSPACE} && source test_python/bin/activate && python CGATPipelines/CGATPipelines/pipeline_testing.py -v 5 -p 10 make full"
 
 echo "Building report"
-cd $WORKSPACE
+cd ${WORKSPACE}
 python CGATPipelines/CGATPipelines/pipeline_testing.py -v 5 -p 10 make build_report
 
 echo "Publishing report"
