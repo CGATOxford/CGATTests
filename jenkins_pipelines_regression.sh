@@ -62,11 +62,11 @@ printenv
 source test_python/bin/activate
 
 # at the moment, use develop so that the perl scripts are found.
-cd cgat && python setup.py install
-cd CGATPipelines && python setup.py develop
+cd ${WORKSPACE}/cgat && python setup.py install
+cd ${WORKSPACE}/CGATPipelines && python setup.py develop
 
 # copy test configuration files
-ln -fs config/{pipeline.ini,conf.py} .
+cd ${WORKSPACE} && ln -fs config/{pipeline.ini,conf.py} .
 
 error_report() {
     echo "Error detected"
