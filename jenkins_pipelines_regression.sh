@@ -27,7 +27,7 @@ else
 fi
 
 export MODULEPATH=/usr/share/Modules/modulefiles:/etc/modulefiles:/ifs/apps/modulefiles
-eval `modulecmd bash load ${PYTHON_MODULES} apps/java apps/perl apps/graphlib bio/alignlib bio/all`
+eval `modulecmd bash load ${PYTHON_MODULES} bio/all`
 
 DIR_PUBLISH=/ifs/public/cgatpipelines/jenkins_report/
 URL_SUB="s/\/ifs\/mirror\/jenkins\/PipelineRegressionTests\/report\/html/http:\/\/www.cgat.org\/downloads\/public\/cgatpipelines\/jenkins_report/"

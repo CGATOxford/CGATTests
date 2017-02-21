@@ -22,7 +22,7 @@ else
 fi
 
 export MODULEPATH=/usr/share/Modules/modulefiles:/etc/modulefiles:/ifs/apps/modulefiles
-eval `modulecmd bash load ${PYTHON_MODULES} apps/java apps/perl apps/graphlib bio/alignlib bio/all apps/emacs`
+eval `modulecmd bash load ${PYTHON_MODULES} bio/all`
 
 # number of parallel jobs to run for testing
 NUM_JOBS=4
