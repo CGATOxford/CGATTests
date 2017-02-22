@@ -81,7 +81,7 @@ trap 'error_report' ERR
 # run pipelines
 
 echo "Starting pipelines"
-ssh ${SUBMIT_HOST} "cd ${WORKSPACE} && source test_python/bin/activate && python CGATPipelines/CGATPipelines/pipeline_testing.py -v 5 -p 10 make full"
+ssh ${SUBMIT_HOST} "cd ${WORKSPACE} && module load ${PYTHON_MODULES} bio/all && source test_python/bin/activate && python CGATPipelines/CGATPipelines/pipeline_testing.py -v 5 -p 10 make full"
 
 echo "Building report"
 cd ${WORKSPACE}
