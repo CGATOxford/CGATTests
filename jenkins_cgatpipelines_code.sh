@@ -18,5 +18,6 @@ export TEST_ALL=1
 # bash install-CGAT-pipelines.sh --jenkins
 
 # install and test cgat scripts
+cp CGATPipelines/install-CGAT-tools.sh .
 bash install-CGAT-tools.sh --jenkins
 
