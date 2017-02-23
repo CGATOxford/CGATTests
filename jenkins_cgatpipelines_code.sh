@@ -14,9 +14,9 @@ export JENKINS_PYTHON_VERSION
 export TEST_ALL=1
 
 # Required when testing install-CGAT-tools.sh on a branch called SLV-install-jenkins
-wget -O install-CGAT-pipelines.sh https://raw.githubusercontent.com/CGATOxford/CGATPipelines/SLV-install-jenkins/install-CGAT-tools.sh
-bash install-CGAT-pipelines.sh --jenkins
+# wget -O install-CGAT-pipelines.sh https://raw.githubusercontent.com/CGATOxford/CGATPipelines/SLV-install-jenkins/install-CGAT-tools.sh
+# bash install-CGAT-pipelines.sh --jenkins
 
 # install and test cgat scripts
-# bash install-CGAT-tools.sh --jenkins
+bash install-CGAT-tools.sh --jenkins
 
