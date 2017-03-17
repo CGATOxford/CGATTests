@@ -84,9 +84,8 @@ echo "Starting pipelines"
 ssh ${SUBMIT_HOST} "cd ${WORKSPACE} && module load ${PYTHON_MODULES} bio/all && source test_python/bin/activate && python CGATPipelines/CGATPipelines/pipeline_testing.py -v 5 -p 10 make full"
 
 echo "Building report"
-cd ${WORKSPACE}
 python CGATPipelines/CGATPipelines/pipeline_testing.py -v 5 -p 10 make build_report
 
 echo "Publishing report"
-cp -arf report/html/* ${DIR_PUBLISH}/
-find ${DIR_PUBLISH}/ -name "*.html" -exec perl -p -i -e ${URL_SUB} {} \;
+cp -arf report/html/* ${DIR_PUBLISH}
+find ${DIR_PUBLISH} -name "*.html" -exec perl -p -i -e ${URL_SUB} {} \;
