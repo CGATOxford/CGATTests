@@ -33,6 +33,9 @@ export TEST_ALL=1
 # wget -O install-CGAT-pipelines.sh https://raw.githubusercontent.com/CGATOxford/CGATPipelines/SLV-install-jenkins/install-CGAT-tools.sh
 # bash install-CGAT-pipelines.sh --jenkins
 
+# https://cgatwiki.imm.ox.ac.uk/xwiki/bin/view/IT/System%20Administration/LANG%20and%20LC_ALL%20environment%20variables
+export LANG=en_GB.UTF-8
+
 # install and test cgat scripts
 cp CGATPipelines/install-CGAT-tools.sh .
 bash install-CGAT-tools.sh --jenkins

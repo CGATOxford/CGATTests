@@ -16,6 +16,10 @@ set -o pipefail
 # trace what gets executed
 set -o xtrace
 
+# configure module
+unset -f module
+module() {  eval `/usr/bin/modulecmd bash $*`; }
+
 # Host to run pipeline from. Jenkins must be able to SSH into there.
 SUBMIT_HOST=jenkins@cgath1
 
@@ -39,51 +43,34 @@ cd ${WORKSPACE}
 # if no Python version is selected, default is Python 2.7
 [[ -z "$JENKINS_PYTHON_VERSION" ]] && JENKINS_PYTHON_VERSION="2.7"
 
-# setup environment
-if [[ "$JENKINS_PYTHON_VERSION" == "2.7" ]] ; then
+# use conda
+CONDA_HOME=${WORKSPACE}/conda-install
 
-    # use /ifs/apps for py27
-    eval `modulecmd bash load bio/all`
+# configure environment modules
+module load bio/all
+module unload apps/R apps/python
 
-    # setup virtual environment
-    virtualenv --system-site-packages python_ve
+# download and install conda
+wget http://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
+bash Miniconda3-latest-Linux-x86_64.sh -b -p ${CONDA_HOME}
+export PATH=${CONDA_HOME}/bin:${PATH}
 
-    # activate virtual environment
-    source python_ve/bin/activate
+# Configure conda
+conda config --set allow_softlinks False
+conda config --add channels 'conda-forge'
+conda config --add channels 'defaults'
+conda config --add channels 'r'
+conda config --add channels 'bioconda'
 
-elif [[ "$JENKINS_PYTHON_VERSION" == "3.5" ]] ; then
+# Update conda
+conda update --all -y
 
-    # use conda for py35
-    CONDA_HOME=${WORKSPACE}/conda-install
+# Install dependencies
+conda install cgat-scripts-devel cgat-pipelines-nosetests gcc gat r-gmd 'pysam=0.11.1' 'python='$JENKINS_PYTHON_VERSION 'r=3.3.1' -y
 
-    # configure environment modules
-    eval `modulecmd bash load bio/all`
-    eval `modulecmd bash unload apps/R apps/python`
+[[ "$JENKINS_PYTHON_VERSION" == "3.5" ]] && pip install bx-python
 
-    # download and install conda
-    wget http://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
-    bash /ifs/apps/Miniconda3-latest-Linux-x86_64.sh -b -p ${CONDA_HOME}
-    export PATH=${CONDA_HOME}/bin:${PATH}
-
-    # Configure conda
-    conda config --set allow_softlinks False
-    conda config --add channels 'conda-forge'
-    conda config --add channels 'defaults'
-    conda config --add channels 'r'
-    conda config --add channels 'bioconda'
-
-    # Update conda
-    conda update --all -y
-
-    # Install dependencies
-    conda install cgat-scripts-devel cgat-pipelines-nosetests gcc 'python='$JENKINS_PYTHON_VERSION -y
-
-else
-    echo "unsupported python version ${JENKINS_PYTHON_VERSION}"
-    exit 1
-fi
-
-
+# Parameterised testing
 if [[ $JENKINS_CLEAR_TESTS ]]; then
    for x in $JENKINS_CLEAR_TESTS; do
       echo "removing old test data for test: $x"
@@ -126,28 +113,12 @@ trap 'error_report' ERR
 # run pipelines
 
 echo "Starting pipelines"
-
-if [[ $JENKINS_PYTHON_VERSION == "2.7" ]] ; then
-
-    ssh ${SUBMIT_HOST} \
-    "cd ${WORKSPACE} && \
-     module load bio/all && \
-     source python_ve/bin/activate && \
-     python CGATPipelines/CGATPipelines/pipeline_testing.py -v 5 make full"
-
-elif [[ "$JENKINS_PYTHON_VERSION" == "3.5" ]] ; then
-
-    ssh ${SUBMIT_HOST} \
-    "cd ${WORKSPACE} && \
-     module load bio/all  && \
-     module unload apps/R apps/python && \
-     export PATH=${CONDA_HOME}/bin:${PATH} && \
-     python CGATPipelines/CGATPipelines/pipeline_testing.py -v 5 make full"
-
-else
-    echo "unsupported python version ${JENKINS_PYTHON_VERSION}"
-    exit 1
-fi
+ssh ${SUBMIT_HOST} \
+   "cd ${WORKSPACE} && \
+    module load bio/all  && \
+    module unload apps/R apps/python && \
+    export PATH=${CONDA_HOME}/bin:${PATH} && \
+    python CGATPipelines/CGATPipelines/pipeline_testing.py -v 5 make full"
 
 echo "Building report"
 python CGATPipelines/CGATPipelines/pipeline_testing.py -v 5 make build_report
@@ -155,3 +126,4 @@ python CGATPipelines/CGATPipelines/pipeline_testing.py -v 5 make build_report
 echo "Publishing report"
 cp -arf report/html/* ${DIR_PUBLISH}
 find ${DIR_PUBLISH} -name "*.html" -exec perl -p -i -e ${URL_SUB} {} \;
+
