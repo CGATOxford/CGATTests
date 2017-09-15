@@ -53,7 +53,7 @@ module unload apps/R apps/python
 # download and install conda
 wget http://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
 bash Miniconda3-latest-Linux-x86_64.sh -b -p ${CONDA_HOME}
-export PATH=${CONDA_HOME}/bin:${PATH}
+source ${CONDA_HOME}/bin/activate
 
 # Configure conda
 conda config --set allow_softlinks False
@@ -65,10 +65,18 @@ conda config --add channels 'bioconda'
 # Update conda
 conda update --all -y
 
-# Install dependencies
-conda install cgat-scripts-devel cgat-pipelines-nosetests gcc gat r-gmd 'pysam=0.11.1' 'python='$JENKINS_PYTHON_VERSION 'r=3.3.1' -y
+# Install dependencies in a conda environment
+conda env create -f /ifs/mirror/jenkins/config/env.yml
+#conda create -n jenkins-env cgat-scripts-devel cgat-pipelines-nosetests gcc gat r-gmd 'pysam=0.11.1' 'python='$JENKINS_PYTHON_VERSION 'r=3.3.1' -y
 
+# Activate conda environment
+source activate jenkins-env
+
+# Install bx-python with pip
 [[ "$JENKINS_PYTHON_VERSION" == "3.5" ]] && pip install bx-python
+
+# Printout conda environment as reference
+conda env export -n jenkins-env
 
 # Parameterised testing
 if [[ $JENKINS_CLEAR_TESTS ]]; then
@@ -117,7 +125,8 @@ ssh ${SUBMIT_HOST} \
    "cd ${WORKSPACE} && \
     module load bio/all  && \
     module unload apps/R apps/python && \
-    export PATH=${CONDA_HOME}/bin:${PATH} && \
+    source ${CONDA_HOME}/bin/activate jenkins-env && \
+    conda env export && \
     python CGATPipelines/CGATPipelines/pipeline_testing.py -v 5 make full"
 
 echo "Building report"
