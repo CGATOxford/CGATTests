@@ -34,5 +34,5 @@ export TEST_ALL=1
 #bash install-CGAT-scripts.sh --jenkins
 
 # install and test cgat scripts
-bash install-CGAT-tools.sh --jenkins
+xvfb-run bash install-CGAT-tools.sh --jenkins
 
