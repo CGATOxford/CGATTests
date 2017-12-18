@@ -40,43 +40,8 @@ URL_SUB="s/\/ifs\/mirror\/jenkins\/PipelineRegressionTests\/report\/html/http:\/
 # configured custom workspace folder as advanced setting via Jenkins web GUI
 cd ${WORKSPACE}
 
-# if no Python version is selected, default is Python 2.7
-[[ -z "$JENKINS_PYTHON_VERSION" ]] && JENKINS_PYTHON_VERSION="2.7"
-
-# use conda
-CONDA_HOME=${WORKSPACE}/conda-install
-
-# configure environment modules
-module load bio/all
-module unload apps/R apps/python
-
-# download and install conda
-wget http://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
-bash Miniconda3-latest-Linux-x86_64.sh -b -p ${CONDA_HOME}
-source ${CONDA_HOME}/bin/activate
-
-# Configure conda
-conda config --set allow_softlinks False
-conda config --add channels 'conda-forge'
-conda config --add channels 'defaults'
-conda config --add channels 'r'
-conda config --add channels 'bioconda'
-
-# Update conda
-conda update --all -y
-
-# Install dependencies in a conda environment
-conda env create -f /ifs/mirror/jenkins/config/env.yml
-#conda create -n jenkins-env cgat-scripts-devel cgat-pipelines-nosetests gcc gat r-gmd 'pysam=0.11.1' 'python='$JENKINS_PYTHON_VERSION 'r=3.3.1' -y
-
-# Activate conda environment
-source activate jenkins-env
-
-# Install bx-python with pip
-[[ "$JENKINS_PYTHON_VERSION" == "3.5" ]] && pip install bx-python
-
-# Printout conda environment as reference
-conda env export -n jenkins-env
+# use automated installation
+bash CGATPipelines/install-CGAT-tools.sh --jenkins --env-name jenkins-env
 
 # Parameterised testing
 if [[ $JENKINS_CLEAR_TESTS ]]; then
@@ -91,18 +56,6 @@ fi
 if [[ "$JENKINS_ONLY_UPDATE" == "false" ]]; then
     rm -rf prereq_* ctmp* test_* _cache _static _templates _tmp report *.log csvdb *.load *.tsv
 fi
-
-# print environment info
-printenv
-
-# at the moment, use develop so that the perl scripts are found.
-sed -i'' -e '/REPO_REQUIREMENT/,/pass/d' ${WORKSPACE}/cgat/setup.py
-sed -i'' -e '/# dependencies/,/dependency_links=dependency_links,/d' ${WORKSPACE}/cgat/setup.py
-cd ${WORKSPACE}/cgat && python setup.py install
-
-sed -i'' -e '/REPO_REQUIREMENT/,/pass/d' ${WORKSPACE}/CGATPipelines/setup.py
-sed -i'' -e '/# dependencies/,/dependency_links=dependency_links,/d' ${WORKSPACE}/CGATPipelines/setup.py
-cd ${WORKSPACE}/CGATPipelines && python setup.py develop
 
 # copy test configuration files
 cd ${WORKSPACE} && ln -fs config/{pipeline.ini,conf.py} .
@@ -123,13 +76,13 @@ trap 'error_report' ERR
 echo "Starting pipelines"
 ssh ${SUBMIT_HOST} \
    "cd ${WORKSPACE} && \
-    module load bio/all  && \
-    module unload apps/R apps/python && \
-    source ${CONDA_HOME}/bin/activate jenkins-env && \
-    conda env export && \
-    python CGATPipelines/CGATPipelines/pipeline_testing.py -v 5 make full"
+    source ${WORKSPACE}/conda-install/bin/activate jenkins-env && \
+    module load bio/gatk-full  && \
+    cgatflow testing make full -v 5"
+
 
 echo "Building report"
+source ${WORKSPACE}/conda-install/bin/activate jenkins-env
 python CGATPipelines/CGATPipelines/pipeline_testing.py -v 5 make build_report
 
 echo "Publishing report"
