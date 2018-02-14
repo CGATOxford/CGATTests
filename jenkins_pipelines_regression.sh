@@ -83,7 +83,7 @@ ssh ${SUBMIT_HOST} \
 
 echo "Building report"
 source ${WORKSPACE}/conda-install/bin/activate jenkins-env
-python CGATPipelines/CGATPipelines/pipeline_testing.py -v 5 make build_report
+cgatflow testing make build_report -v 5
 
 echo "Publishing report"
 cp -arf report/html/* ${DIR_PUBLISH}
