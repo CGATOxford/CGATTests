@@ -77,7 +77,7 @@ echo "Starting pipelines"
 ssh ${SUBMIT_HOST} \
    "cd ${WORKSPACE} && \
     source ${WORKSPACE}/conda-install/bin/activate jenkins-env && \
-    module load bio/gatk-full  && \
+    module load bio/gatk-full bio/homer  && \
     cgatflow testing make full -v 5"
 
 
