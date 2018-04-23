@@ -1,0 +1,204 @@
+##########################################################
+##########################################################
+##########################################################
+## Default configuration file for pipeline_testing
+##########################################################
+
+
+projectname: CGAT Pipelines Regression Tests
+copyright: CGAT
+version: 1.0  
+release: ""  
+
+data_url: http://www.cgat.org/downloads/public/cgat/pipeline_test_data_test
+
+## Directory with test data and configurations
+data_dir: /ifs/devel/pipelines/data
+
+## default options for the pipeline scripts
+pipeline_options: -v 5 -p 10 --is-test
+
+# prerequisite pipelines
+# comma-separated list of pipelines that are required
+# for the below tests to run. Currently it is only annotations
+# and it is downloaded and upacked but not re-run
+prerequisites: [prereq_annotations,prereq_genesets]
+
+################################################################
+# Tests to be run.
+#
+# Each section starting with a the prefix 'test_' is a test to
+# be run. By default, the name of the pipeline to use is given
+# by whatever follows the prefix 'test_' but can be set explicitly
+# with 'pipeline' option, for example:
+#
+# [test_maponmouse]
+# pipeline=pipeline_mapping
+#
+# [test_maponhuman]
+# pipeline=pipeline_mapping
+#
+# Each test requires a tar-ball with the data at the location
+# of the URL. The data should extract into a directory called
+# <name of the test>.dir, for example: test_maponmouse.dir,
+# test_maponhuman.dir, etc.
+# 
+# Other options that can be set:
+#
+# target - pipeline target to run, default = "full"
+#
+# regex_md5 - regular expression for files for which md5 checksums should
+#             be computed. This is a comma-separated list.
+#
+# regex_linecount - regular expression matching files to count lines.
+#                   This is a comma-separated list.
+#
+# regex_exist - regular expression matching files to check if they were created.
+#               This is a comma-separated list.
+#
+# The latter two options are useful when a checksum varies
+# in consecutive runs e.g. due to timestamps in log files.
+#
+# Note that regular expression are supposed to match the suffix of
+# a file path.
+test_bamstats:
+    regex_md5: [tsv.gz,idxstats,strand]
+
+    regex_linecount: chr.*picard_stats
+
+#test_chiptools:
+#    regex_linecount: [txt,tsv]
+#
+#    regex_exist: eps
+
+test_genesets:
+    regex_md5: [gff.gz,gtf.gz,bed.gz,tsv.gz]
+
+    regex_exist: [goslim.tsv.gz,go.tsv.gz,genomic_function.bed.gz,genomic_function.tsv.gz]
+
+test_enrichment:
+    regex_md5: [SUMMARY.tsv,Expression_data.xls,gmx]
+
+    regex_exist: [results.tsv,details.tsv]
+
+test_exome:
+    target: variantAnnotator
+
+    regex_md5: [idx,bam,list,vcf]
+
+    regex_linecount: chr.*picard_stats
+
+    regex_exist: chr.*bai
+
+    # confirm with KB before adding these tests
+    #[test_geneinfo]
+    #regex_linecount=all.*tsv
+
+    #regex_exist=ensemblg.*tsv,ensemblg.*load,.*details.*load,.*ont.*load
+
+test_intervals:
+    regex_md5: [bed.gz,tsv.gz]
+
+    regex_linecount: [gat.*tsv.gz,transcriptprofile.tsv.gz,meme.txt]
+
+test_mapping:
+    regex_md5: [ons.gtf.gz,tsv.gz,bam,nreads]
+
+    # gtf files have different sort order on jenkins
+    # AH: bowtie contextstats values fluctuate, not sure why
+    regex_linecount: [reference.gtf.gz,refcoding.gtf.gz,bowtie.contextstats.tsv.gz,star_stats.tsv,picard_stats,bowtie.bam,star.bam]
+
+test_peakcallingPEnarrow:
+    # test filtering and peakcalling for PE file and narrow macs2 settings
+    pipeline: peakcalling
+
+    regex_md5: [idxstats,inputs.tsv,peakcalling_summary.tsv,post_filtering_check.tsv,counts.tsv,size.tsv,insert_sizes.tsv]
+
+    regex_linecount: [narrowPeak,bed.gz,xls.gz,macs2.tsv,peakcalling_bams_and_inputs.tsv,_filtered.bam,filteringlog]
+
+test_peakcallingPEnarrowIDR:
+    # test PE narrow macs2 peakcalling and IDR without oracle peaklist
+    pipeline: peakcalling
+
+    regex_md5: [idxstats,IDR_pairs.tsv,insert_sizes.tsv,inputs.tsv,summary.tsv,check.tsv,counts.tsv,size.tsv]
+
+    regex_linecount: [macs2.tsv,.macs2_filtered.tsv,.macs2_table.tsv,narrowPeak,.bed.gz,xls.gz,IDRpeaks,IDR_QC.tsv,IDR_results.tsv,_filtered.bam,filteringlog,peakcalling_bams_and_inputs.tsv]
+
+test_peakcallingPEnarrowIDRoracle:
+    # test PE narrow macs2 peakcalling and IDR using oracle peaklist
+    pipeline: peakcalling
+
+    regex_md5: [idxstats,IDR_pairs.tsv,insert_sizes.tsv,inputs.tsv,summary.tsv,check.tsv,counts.tsv,size.tsv]
+
+    regex_linecount: [macs2.tsv,.macs2_filtered.tsv,.macs2_table.tsv,narrowPeak,.bed.gz,xls.gz,IDRpeaks,IDR_QC.tsv,IDR_results.tsv,_filtered.bam,filteringlog,peakcalling_bams_and_inputs.tsv]
+
+test_peakcallingSEIDR:
+    # test SE narrow macs2 peakcalling and IDR without oracle peaklist
+    pipeline: peakcalling
+
+    regex_md5: [_filtered.bam,idxstats,insert_sizes.tsv,inputs.tsv,summary.tsv,check.tsv,counts.tsv,size.tsv,IDR_pairs.tsv]
+
+    regex_linecount: [macs2.tsv,.macs2_filtered.tsv,.macs2_table.tsv,narrowPeak,.bed.gz,xls.gz,IDRpeaks,IDR_QC.tsv,IDR_results.tsv,filteringlog,peakcalling_bams_and_inputs.tsv,WT_hs_pooled_filtered.bam]
+
+test_peakcallingSEbroad:
+    # test filtering and peakcalling for SE file and broad macs2 settings
+    pipeline: peakcalling
+
+    regex_md5: [_filtered.bam,idxstats,insert_sizes.tsv,inputs.tsv,summary.tsv,check.tsv,counts.tsv,size.tsv]
+
+    regex_linecount: [bed.gz,xls.gz,broadPeak,gappedPeak,filteringlog,peakcalling_bams_and_inputs.tsv]
+
+test_readqc:
+    regex_md5: [tsv.gz,fastqc,summary.txt]
+
+    # fastqc_data.tx: floating point differences in the duplication
+    # section prevents exact comparison
+    #
+    # _screen.txt$: sort order differs
+    regex_linecount: [fastqc_data.txt,_screen.txt]
+
+test_rnaseqdiffexpression:
+    regex_md5: [tsv,gz]
+
+test_rnaseqqc:
+    regex_md5: [tsv,tsv.gz,bed.gz]
+    # The experiment contains the project name, which is different depending
+    # on location.
+    # In the genesets, the p_id is not set consistently, seems to be a random
+    # ordering issue.
+    # The context stats fluctuate, might an assignment issue where one interval
+    # is assigned randomly to equally well matching intervals.
+    regex_linecount: [experiment.tsv,reference.gtf.gz,refcoding.gtf.gz,hisat.contextstats.tsv.gz,hisat.altcontextstats.tsv.gz,coding_exons.gtf.gz]
+
+test_scrnaseqqc:
+    regex_md5: [bam.stats,ercc.tsv.summary,fa,tsv,clean]
+
+    # confirm with JS before adding these tests
+    #[test_splicing]
+
+test_windows:
+    regex_md5: [bed.gz,tsv,stats]
+
+    regex_linecount: [.*_counts_l2foldchange_.*.tsv.gz,design.*.tsv.gz,genomic.covered.tsv.gz]
+
+    # [test_timeseries]
+    # regex_md5=tsv.gz,tsv
+    #
+    # regex_linecount=distance.tsv,.*-expression.tsv,.*-eigengene_loadings.tsv,.*-diff-cond.tsv,.*-time.tsv
+
+    ###############################################################
+report:
+    # number of threads to use to build the documentation
+    threads: 1
+
+    # directory for html documentation
+    html: report/html
+
+    # directory for doctrees
+    doctrees: report/doctrees
+
+    # prefix for publishing
+    prefix: default
+
+    # engine to use for building report
+    engine: cgatreport
